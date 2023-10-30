@@ -17,8 +17,6 @@ public class Entity : MonoBehaviour
 
     protected int HP;
 
-    public void TakeDamage(int dmg){}
-
     public float getX(){
         return x;
     }

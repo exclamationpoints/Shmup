@@ -11,6 +11,8 @@ public class PlayerController : Entity
     private int score;
     public Text displayText;
 
+    public HealthBar healthBar;
+
     void Start()
     {
         objTransform = this.gameObject.transform;
@@ -26,7 +28,7 @@ public class PlayerController : Entity
         HP = 5 * 20;
 
         isInvulnerable = false;
-        invulnerableTimer = 2.5f;
+        invulnerableTimer = 3;
 
         score = 0;
     }
@@ -92,10 +94,10 @@ public class PlayerController : Entity
 
             float approxTimer = Mathf.Round(invulnerableTimer * 10) / 10;
 
-            if(approxTimer % 2 == 0.5 || approxTimer % 2 == 1.5){
-                sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 1);
-            } else if(approxTimer % 2 == 0.0 || approxTimer % 2 == 1.0) {
+            if(approxTimer % 2 == 0.0 || approxTimer % 2 == 1.0){
                 sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 0.25f);
+            } else if(approxTimer % 2 == 0.5 || approxTimer % 2 == 1.5) {
+                sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 1);
             }
 
             invulnerableTimer -= Time.deltaTime;
@@ -109,9 +111,12 @@ public class PlayerController : Entity
         }
     }
 
-    public void TakeDamage(int dmg){
+    public void TakeDamage(int dmg)
+    {
         if (!isInvulnerable){
             HP -= dmg;
+
+            healthBar.Configure();
 
             if (HP > 0){
                 // apply small explosion
@@ -123,13 +128,15 @@ public class PlayerController : Entity
         }    
     }
 
-    public void AddScore(){
+    public void AddScore()
+    {
         score += 50;
 
         displayText.text = score.ToString();
     }
 
-    public void SetToInvulnerable(){
+    public void SetToInvulnerable()
+    {
         isInvulnerable = true;
     }
 }
