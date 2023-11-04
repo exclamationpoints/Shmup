@@ -5,9 +5,11 @@ using UnityEngine;
 public class EnemyProjectile : Projectile
 {
     private PlayerController Player;
+    public Animator animator;
 
     private float xSpeed;
     private float ySpeed;
+    private bool hasCollided;
 
     void Start()
     {
@@ -33,6 +35,8 @@ public class EnemyProjectile : Projectile
         ySpeed *= multiplier;
 
         objTransform.Rotate(0, 0, Mathf.Atan(ySpeed / xSpeed) * 180 / Mathf.PI, Space.Self);
+
+        hasCollided = false;
     }
 
     void Update()
@@ -52,8 +56,12 @@ public class EnemyProjectile : Projectile
         }
 
         if (IsHitting(Player)){
-            Destroy(this.gameObject);
-            Player.TakeDamage(damage);
+            animator.SetBool("hasCollided", true);
+            StartCoroutine(deleteObject());
+            if(!hasCollided){
+                Player.TakeDamage(damage);
+                hasCollided = true;
+            }
         }
 
         if (Player == null){
@@ -72,5 +80,11 @@ public class EnemyProjectile : Projectile
                 (playerX + playerWidth / 2 > x - width / 2) &&
                 (y + height / 2 > playerY - playerHeight / 2) &&
                 (playerY + playerHeight / 2 > y - height / 2));
+    }
+
+    IEnumerator deleteObject()
+    {
+        yield return new WaitForSeconds(1);
+        Destroy(this.gameObject);
     }
 }

@@ -8,6 +8,8 @@ public class Enemy : Entity
     private PlayerController Player;
 
     private Transform Blaster;
+    public AudioSource EnemyDeath;
+    public Animator animator;
 
     void Start()
     {
@@ -21,7 +23,7 @@ public class Enemy : Entity
         width = objTransform.localScale.x;
         height = objTransform.localScale.y;
 
-        speed = 2;
+        speed = 2.4f;
 
         shotCoolDown = 2;
 
@@ -65,10 +67,16 @@ public class Enemy : Entity
                 shotCoolDown -= Time.deltaTime;
 
                 if (shotCoolDown <= 0){
-                    GameObject projectile = Instantiate(Projectile,
-                                    new Vector3(Blaster.position.x, Blaster.position.y, 0),
-                                    new Quaternion(0,0,0,0));
-
+                    if(xComp > Blaster.position.x){
+                        GameObject projectile = Instantiate(Projectile,
+                                        new Vector3(Blaster.position.x, Blaster.position.y, 0),
+                                        new Quaternion(0,0,1,0));
+                    }
+                    else{
+                        GameObject projectile = Instantiate(Projectile,
+                                        new Vector3(Blaster.position.x, Blaster.position.y, 0),
+                                        new Quaternion(0,0,0,0));
+                    }
                     shotCoolDown = 2;
                 }
             }
@@ -97,9 +105,17 @@ public class Enemy : Entity
             // apply big explosion
 
             Spawner.DeleteEnemy(this);
-            Destroy(this.gameObject);
+            animator.SetBool("isDead", true);
+            StartCoroutine(deleteObject());
+            EnemyDeath.Play();
 
             Player.AddScore();
         }
+    }
+
+    IEnumerator deleteObject()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Destroy(this.gameObject);
     }
 }

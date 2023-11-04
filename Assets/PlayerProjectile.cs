@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerProjectile : Projectile
 {
     private EnemySpawner EnSpawner;
+    public Animator animator;
+    private bool hasCollided;
 
     void Start()
     {
@@ -17,7 +19,7 @@ public class PlayerProjectile : Projectile
         width = objTransform.localScale.x;
         height = objTransform.localScale.y;
 
-        speed = 3;
+        speed = 3.5f;
 
         damage = 5;
     }
@@ -40,8 +42,13 @@ public class PlayerProjectile : Projectile
 
         foreach(Enemy enemy in EnSpawner.GetEnemiesAlive()){
             if (IsHitting(enemy)){
-                Destroy(this.gameObject);
-                enemy.TakeDamage(damage);
+                animator.SetBool("hasCollided", true);
+                StartCoroutine(deleteObject());
+                if(!hasCollided){
+                    enemy.TakeDamage(damage);
+                    hasCollided = true;
+                    speed = -2f;
+                }
                 break;
             }
         }
@@ -57,5 +64,11 @@ public class PlayerProjectile : Projectile
 
         return Mathf.Sqrt((x - enemyX) * (x - enemyX) + 
             (y - enemyY) * (y - enemyY)) <= enemyRadius + allowance;
+    }
+
+    IEnumerator deleteObject()
+    {
+        yield return new WaitForSeconds(1);
+        Destroy(this.gameObject);
     }
 }

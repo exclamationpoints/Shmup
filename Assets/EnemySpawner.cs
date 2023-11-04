@@ -12,6 +12,7 @@ public class EnemySpawner : MonoBehaviour
     private float enemyHeight;
 
     private float spawnCooldown;
+    private float cooldownSpeedup;
 
     void Start()
     {
@@ -21,6 +22,7 @@ public class EnemySpawner : MonoBehaviour
         enemyHeight = Enemy.transform.localScale.y;
 
         spawnCooldown = 1.5f;
+        cooldownSpeedup = 0f;
     }
 
     void Update()
@@ -35,7 +37,11 @@ public class EnemySpawner : MonoBehaviour
 
             enemiesAlive.Add(enemy);
 
-            spawnCooldown = 3;
+            spawnCooldown = 3f-cooldownSpeedup;
+
+            if(cooldownSpeedup <= 2){
+                cooldownSpeedup += 0.125f;
+            }
         }
     }
 
