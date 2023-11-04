@@ -86,16 +86,16 @@ public class PlayerController : Entity
                 x = x + speed * Time.deltaTime;
 
                 // prevent player from passing right border
-                if (x + width / 2 > 10f){
-                    x = 10f - width / 2;
+                if (x + width / 2 > 9f){
+                    x = 9f - width / 2;
                 }
 
             } else if (Input.GetKey(KeyCode.LeftArrow)){
                 x = x - speed * Time.deltaTime;
 
                 // prevent player from passing left border
-                if (x - width / 2 < -10f){
-                    x = -10f + width / 2;
+                if (x - width / 2 < -9f){
+                    x = -9f + width / 2;
                 }
             }
 

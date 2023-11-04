@@ -41,7 +41,7 @@ public class Enemy : Entity
             x = objTransform.position.x;
 
             // if it fully passed through left border, destroy it
-            if (x < -11.42f - width / 2){
+            if (x < -9.5f - width / 2){
                 Spawner.DeleteEnemy(this);
                 Destroy(this.gameObject);
             }
